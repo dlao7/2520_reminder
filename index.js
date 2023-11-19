@@ -33,18 +33,20 @@ app.use(passport.session());
 
 // Routes start here
 // Reminders
-app.get("/reminders", reminderController.list);
-app.get("/reminder/new", reminderController.new);
-app.get("/reminder/:id", reminderController.listOne);
-app.get("/reminder/:id/edit", reminderController.edit);
-app.post("/reminder/", reminderController.create);
-app.post("/reminder/update/:id", reminderController.update);
-app.post("/reminder/delete/:id", reminderController.delete);
+app.get("/reminders", ensureAuthenticated, reminderController.list);
+app.get("/reminder/new", ensureAuthenticated, reminderController.new);
+app.get("/reminder/:id", ensureAuthenticated, reminderController.listOne);
+app.get("/reminder/:id/edit", ensureAuthenticated, reminderController.edit);
+app.post("/reminder/", ensureAuthenticated, reminderController.create);
+app.post("/reminder/update/:id", ensureAuthenticated, reminderController.update);
+app.post("/reminder/delete/:id", ensureAuthenticated, reminderController.delete);
 
-// Register or Login
+// Dashboard
+app.get("/dashboard", ensureAuthenticated, authController.dashboard);
+
+// Register, Login or Logout
 app.get("/register", authController.register);
 app.get("/login", authController.login);
-app.get("/dashboard", ensureAuthenticated, authController.dashboard);
 
 app.post("/register", authController.registerSubmit);
 app.post("/login", authController.loginSubmit);

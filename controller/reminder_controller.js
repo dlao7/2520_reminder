@@ -2,7 +2,10 @@ let database = require("../database");
 
 let remindersController = {
   list: (req, res) => {
-    res.render("reminder/index", { reminders: database.cindy.reminders });
+    let userData = database.reminderModel.findReminders(req.user.id);
+    if (userData) {
+      res.render("reminder/index", { reminders: userData });
+    }
   },
 
   new: (req, res) => {
@@ -11,37 +14,42 @@ let remindersController = {
 
   listOne: (req, res) => {
     let reminderToFind = req.params.id;
-    let searchResult = database.cindy.reminders.find(function (reminder) {
+    let userData = database.reminderModel.findReminders(req.user.id);
+
+    let searchResult = userData.find((reminder) => {
       return reminder.id == reminderToFind;
     });
     if (searchResult != undefined) {
       res.render("reminder/single-reminder", { reminderItem: searchResult });
     } else {
-      res.render("reminder/index", { reminders: database.cindy.reminders });
+      res.render("reminder/index", { reminders: userData });
     }
   },
 
   create: (req, res) => {
+    let userData = database.reminderModel.findReminders(req.user.id);
     let reminder = {
-      id: database.cindy.reminders.length + 1,
+      id: userData.length + 1,
       title: req.body.title,
       description: req.body.description,
       completed: false,
     };
-    database.cindy.reminders.push(reminder);
+
+    userIndex = database.reminderDatabase.findIndex((user => user.id == req.user.id))
+
+    database.reminderDatabase[userIndex].reminders.push(reminder);
     res.redirect("/reminders");
   },
 
   edit: (req, res) => {
     let reminderToFind = req.params.id;
-    let searchResult = database.cindy.reminders.find(function (reminder) {
+    let searchResult = database.cindy.reminders.find((reminder) => {
       return reminder.id == reminderToFind;
     });
     res.render("reminder/edit", { reminderItem: searchResult });
   },
 
   update: (req, res) => {
-    // implementation here 👈
     let reminderToFind = req.params.id;
     remIndex = database.cindy.reminders.findIndex((rem => rem.id == reminderToFind));
 
