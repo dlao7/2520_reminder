@@ -44,7 +44,7 @@ const reminderModel = {
     if (user) {
       return user.reminders;
     }
-    throw new Error("Couldn't find your reminders");
+    throw new Error("Couldn't find your reminders.");
   },
 }
 

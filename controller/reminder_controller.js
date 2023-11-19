@@ -36,22 +36,26 @@ let remindersController = {
     };
 
     userIndex = database.reminderDatabase.findIndex((user => user.id == req.user.id))
-
     database.reminderDatabase[userIndex].reminders.push(reminder);
+
     res.redirect("/reminders");
   },
 
   edit: (req, res) => {
     let reminderToFind = req.params.id;
-    let searchResult = database.cindy.reminders.find((reminder) => {
+    let userData = database.reminderModel.findReminders(req.user.id);
+
+    let searchResult = userData.find((reminder) => {
       return reminder.id == reminderToFind;
     });
+
     res.render("reminder/edit", { reminderItem: searchResult });
   },
 
   update: (req, res) => {
     let reminderToFind = req.params.id;
-    remIndex = database.cindy.reminders.findIndex((rem => rem.id == reminderToFind));
+    let userData = database.reminderModel.findReminders(req.user.id);
+    remIndex = userData.findIndex((rem => rem.id == reminderToFind));
 
     // set boolean in description as true if the status of the radio button was true.
     if (req.body.completed === "true"){
@@ -69,7 +73,8 @@ let remindersController = {
     };
 
     // replace the entry
-    database.cindy.reminders[remIndex] = updatedReminder;
+    userIndex = database.reminderDatabase.findIndex((user => user.id == req.user.id))
+    database.reminderDatabase[userIndex].reminders[remIndex] = updatedReminder;
 
     // Redirect to main reminders page.
     res.redirect("/reminders");
@@ -78,10 +83,12 @@ let remindersController = {
   delete: (req, res) => {
     // Find the index corresponding to the ID of the reminder.
     let reminderToFind = req.params.id;
-    remIndex = database.cindy.reminders.findIndex((rem => rem.id == reminderToFind));
+    let userData = database.reminderModel.findReminders(req.user.id);
+    remIndex = userData.findIndex((rem => rem.id == reminderToFind));
     
     // Remove the reminder at that index.
-    database.cindy.reminders.splice(remIndex, 1);
+    userIndex = database.reminderDatabase.findIndex((user => user.id == req.user.id))
+    database.reminderDatabase[userIndex].reminders.splice(remIndex, 1);
 
     // Redirect to main reminders page.
     res.redirect("/reminders");

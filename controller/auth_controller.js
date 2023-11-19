@@ -18,8 +18,8 @@ let authController = {
 
   loginSubmit:
     passport.authenticate("local", {
-      successRedirect: "dashboard",
-      failureRedirect: "login",
+      successRedirect: "/dashboard",
+      failureRedirect: "/login",
     }),
 
   registerSubmit: (req, res) => {
