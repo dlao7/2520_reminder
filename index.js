@@ -6,7 +6,7 @@ const session = require("express-session");
 
 const reminderController = require("./controller/reminder_controller");
 const authController = require("./controller/auth_controller");
-const { ensureAuthenticated } = require("./middleware/checkAuth");
+const { ensureAuthenticated, forwardAuthenticated } = require("./middleware/checkAuth");
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
@@ -25,6 +25,7 @@ app.use(
 
 const passport = require("./middleware/passport");
 
+// Express Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(ejsLayouts);
@@ -33,18 +34,20 @@ app.use(passport.session());
 
 // Routes start here
 // Reminders
-app.get("/reminders", reminderController.list);
-app.get("/reminder/new", reminderController.new);
-app.get("/reminder/:id", reminderController.listOne);
-app.get("/reminder/:id/edit", reminderController.edit);
-app.post("/reminder/", reminderController.create);
-app.post("/reminder/update/:id", reminderController.update);
-app.post("/reminder/delete/:id", reminderController.delete);
+app.get("/reminders", ensureAuthenticated, reminderController.list);
+app.get("/reminder/new", ensureAuthenticated, reminderController.new);
+app.get("/reminder/:id", ensureAuthenticated, reminderController.listOne);
+app.get("/reminder/:id/edit", ensureAuthenticated, reminderController.edit);
+app.post("/reminder/", ensureAuthenticated, reminderController.create);
+app.post("/reminder/update/:id", ensureAuthenticated, reminderController.update);
+app.post("/reminder/delete/:id", ensureAuthenticated, reminderController.delete);
 
-// Register or Login
-app.get("/register", authController.register);
-app.get("/login", authController.login);
+// Dashboard
 app.get("/dashboard", ensureAuthenticated, authController.dashboard);
+
+// Register, Login or Logout
+app.get("/register", authController.register);
+app.get("/login", forwardAuthenticated, authController.login);
 
 app.post("/register", authController.registerSubmit);
 app.post("/login", authController.loginSubmit);
@@ -56,6 +59,6 @@ app.get("/logout", (req, res) => {
 
 app.listen(3001, () => {
   console.log(
-    "Server running. Visit: http://localhost:3001/reminders in your browser 🚀"
+    "Server running. Visit: http://localhost:3001 in your browser 🚀"
   );
 });
