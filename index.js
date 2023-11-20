@@ -6,7 +6,7 @@ const session = require("express-session");
 
 const reminderController = require("./controller/reminder_controller");
 const authController = require("./controller/auth_controller");
-const { ensureAuthenticated, forwardAuthenticated } = require("./middleware/checkAuth");
+const { ensureAuthenticated, forwardAuthenticated, isAdmin } = require("./middleware/checkAuth");
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
@@ -44,6 +44,8 @@ app.post("/reminder/delete/:id", ensureAuthenticated, reminderController.delete)
 
 // Dashboard
 app.get("/dashboard", ensureAuthenticated, authController.dashboard);
+app.get("/admin", isAdmin, authController.admin)
+app.get("/revoke/:id", authController.revoke)
 
 // Register, Login or Logout
 app.get("/register", authController.register);
@@ -62,3 +64,4 @@ app.listen(3001, () => {
     "Server running. Visit: http://localhost:3001 in your browser 🚀"
   );
 });
+

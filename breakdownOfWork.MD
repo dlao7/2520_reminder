@@ -14,6 +14,11 @@ I worked on the following tasks:
 1. Integrated passport authentication of users.
 2. Implemented reminder display for authenticated users.
 3. Implemented display of one reminder and reminder creation for authenticated users.
+4. Implemented admin page and redirect only if user is an admin.
+5. Implemented display of currently active sessions (ID and userID).
+6. Implemented revoking a specific session.
 
 I also needed to research on Youtube and Google the following things:
 1. https://cookie-script.com/documentation/how-to-check-cookies-on-chrome-and-firefox
+2. https://dev.to/victrexx2002/introduction-to-ejs-a-guide-to-building-dynamic-web-applications-2737
+3. https://stackoverflow.com/questions/30814639/nodejs-express-delete-session-from-sessionstore
