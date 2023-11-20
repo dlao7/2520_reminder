@@ -134,3 +134,11 @@ footer.footer {
   margin-bottom: 10px;
   margin-top: 10px;
 }
+
+.list-admin{
+  list-style-type: none;
+}
+
+.session{
+  padding-bottom: 30px;
+}
