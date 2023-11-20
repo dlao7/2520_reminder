@@ -1,4 +1,3 @@
-let database = require("../database");
 const passport = require("../middleware/passport");
 
 let authController = {
@@ -8,6 +7,22 @@ let authController = {
 
   register: (req, res) => {
     res.render("auth/register");
+  },
+
+  loginSubmit:
+  passport.authenticate("local", {
+    successRedirect: "/dashboard",
+    failureRedirect: "/login",
+  }),
+
+  registerSubmit: (req, res) => {
+    // implement later
+  },
+
+  logout: (req, res) => {
+    req.logout((err) => {
+      if (err) { return next(err); }});
+    res.redirect("/login");
   },
 
   dashboard: (req, res) => {
@@ -45,15 +60,6 @@ let authController = {
     res.redirect("/admin");
   },
 
-  loginSubmit:
-    passport.authenticate("local", {
-      successRedirect: "/dashboard",
-      failureRedirect: "/login",
-    }),
-
-  registerSubmit: (req, res) => {
-    // implement later
-  },
 };
 
 module.exports = authController;
