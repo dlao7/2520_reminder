@@ -9,6 +9,12 @@ let reminderDatabase = [
         description: "Buy milk and bread from safeway",
         completed: false,
       },
+      {
+        id: 2,
+        title: "Sleeping",
+        description: "Nap for three hours",
+        completed: false,
+      },
     ] 
   },
   {
@@ -19,6 +25,18 @@ let reminderDatabase = [
         id: 1,
         title: "Sleeping",
         description: "Sleep a lot",
+        completed: false,
+      },
+    ],
+  },
+  {
+    id: 3,
+    reminders:
+    [
+      {
+        id: 1,
+        title: "Python",
+        description: "Read flask doc",
         completed: false,
       },
     ],

@@ -26,8 +26,7 @@ app.use(
 const passport = require("./middleware/passport");
 
 // Express Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(ejsLayouts);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -38,9 +37,10 @@ app.get("/reminders", ensureAuthenticated, reminderController.list);
 app.get("/reminder/new", ensureAuthenticated, reminderController.new);
 app.get("/reminder/:id", ensureAuthenticated, reminderController.listOne);
 app.get("/reminder/:id/edit", ensureAuthenticated, reminderController.edit);
-app.post("/reminder/", ensureAuthenticated, reminderController.create);
-app.post("/reminder/update/:id", ensureAuthenticated, reminderController.update);
-app.post("/reminder/delete/:id", ensureAuthenticated, reminderController.delete);
+
+app.post("/reminder/", reminderController.create);
+app.post("/reminder/update/:id", reminderController.update);
+app.post("/reminder/delete/:id", reminderController.delete);
 
 // Dashboard
 app.get("/dashboard", ensureAuthenticated, authController.dashboard);
@@ -50,14 +50,10 @@ app.get("/revoke/:id", authController.revoke)
 // Register, Login or Logout
 app.get("/register", authController.register);
 app.get("/login", forwardAuthenticated, authController.login);
+app.get("/logout", authController.logout);
 
 app.post("/register", authController.registerSubmit);
 app.post("/login", authController.loginSubmit);
-app.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) { return next(err); }});
-  res.redirect("/login");
-});
 
 app.listen(3001, () => {
   console.log(
