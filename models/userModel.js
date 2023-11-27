@@ -1,3 +1,5 @@
+const reminderModel = require("./reminderModel");
+
 const database = [
   {
     id: 1,
@@ -23,19 +25,71 @@ const database = [
 ];
 
 const userModel = {
+  createNewUser: (profile, option) => {
+    let userID = database.length + 1;
+    let userEntry;
+
+    if (option === "social"){
+      userEntry = { 
+        id: userID,
+        socialType: profile.provider,
+        socialId: profile.id,
+        name: profile.displayName, 
+        email: profile.profileUrl, 
+        role: "user"
+      }
+    } else if (option === "default"){
+      userEntry = { 
+        id: userID,
+        name: profile.name, 
+        email: profile.email,
+        password: profile.password,
+        role: "user"
+     }
+    }
+
+    database.push(userEntry);
+
+    let databaseEntry = {
+      id: userID,
+      reminders: [
+        {
+          id: 1,
+          title: "Sample Title: Buy Groceries",
+          description: "Sample Description: Buy milk from Safeway",
+          completed: false,
+        },
+      ]
+    }
+    reminderModel.reminderDatabase.push(databaseEntry);
+
+    return userEntry;
+
+  },
+  
   findOne: (email) => {
     const user = database.find((user) => user.email === email);
     if (user) {
       return user;
     }
-    throw new Error(`Couldn't find user with email: ${email}`);
+    return false;
   },
+
   findById: (id) => {
     const user = database.find((user) => user.id === id);
     if (user) {
       return user;
     }
-    throw new Error(`Couldn't find user with id: ${id}`);
+    return false;
+  },
+
+  findBySocialId: (provider, id) => {
+    const user = database.find((user) => user.socialType === provider && user.socialId === id);
+
+    if (user) {
+      return user;
+    }
+    return false;
   },
 };
 

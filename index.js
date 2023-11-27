@@ -49,7 +49,19 @@ app.get("/revoke/:id", authController.revoke)
 
 // Register, Login or Logout
 app.get("/register", authController.register);
+
+// Local Strategy
 app.get("/login", forwardAuthenticated, authController.login);
+
+// Github Strategy
+app.get('/auth/github', authController.githubLogin);
+
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  (req, res) => {
+  res.redirect('/dashboard');
+});
+
 app.get("/logout", authController.logout);
 
 app.post("/register", authController.registerSubmit);

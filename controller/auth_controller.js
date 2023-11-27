@@ -9,14 +9,27 @@ let authController = {
     res.render("auth/register");
   },
 
-  loginSubmit:
-  passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/login",
-  }),
+  loginSubmit: 
+    passport.authenticate("local", {
+      successRedirect: "/dashboard",
+      failureRedirect: "/login",}
+  ),
+
+  githubLogin:
+    passport.authenticate('github', { 
+    scope: [ 'user:email' ] 
+    }),
 
   registerSubmit: (req, res) => {
-    // implement later
+    // let profile = {
+    //   name: req.body.name,
+    //   email: req.body.email,
+    //   password: req.body.password
+    // }
+
+    // usermodel.createNewUser(profile, "default")
+
+    // res.redirect("/login")
   },
 
   logout: (req, res) => {
