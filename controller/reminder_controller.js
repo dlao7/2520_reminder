@@ -28,6 +28,8 @@ let remindersController = {
 
   create: (req, res) => {
     let userData = database.reminderModel.findReminders(req.user.id);
+    // req.body.cover // true or false
+
     let reminder = {
       id: userData.length + 1,
       title: req.body.title,

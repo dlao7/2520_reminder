@@ -1,6 +1,9 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const GitHubStrategy = require("passport-github2").Strategy;
 const userController = require("../controller/user_controller");
+const userModel = require("../models/userModel")
+const devID = require("../devIDs")
 
 const localLogin = new LocalStrategy(
   {
@@ -17,6 +20,26 @@ const localLogin = new LocalStrategy(
   }
 );
 
+const githubLogin = new GitHubStrategy(
+  {
+    clientID: devID.clientID,
+    clientSecret: devID.clientSecret,
+    callbackURL: "http://127.0.0.1:3001/auth/github/callback"
+  },
+  (accessToken, refreshToken, profile, done) => { 
+    const user = userController.getUserBySocialId(profile.provider, profile.id);
+
+    if (user){
+      return done(null, user);
+    } else {
+      let userEntry = userModel.userModel.createNewUser(profile, "social");
+      
+      return done(null, userEntry);
+    }
+    
+})
+;
+
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -30,4 +53,4 @@ passport.deserializeUser((id, done) => {
   }
 });
 
-module.exports = passport.use(localLogin);
+module.exports = passport.use(localLogin), passport.use(githubLogin);

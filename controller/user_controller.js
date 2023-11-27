@@ -18,6 +18,14 @@ const getUserById = (id) => {
   return null;
 };
 
+const getUserBySocialId = (provider, id) => {
+  let user = userModel.findBySocialId(provider, id);
+  if (user) {
+    return user;
+  }
+  return null;
+};
+
 isUserValid = (user, password) => {
   return user.password === password;
 }
@@ -25,4 +33,5 @@ isUserValid = (user, password) => {
 module.exports = {
   getUserByEmailIdAndPassword,
   getUserById,
+  getUserBySocialId,
 };
