@@ -1,4 +1,5 @@
-let database = require("../models/reminderModel");
+const database = require("../models/reminderModel");
+const devID = require("../devIDs");
 
 let remindersController = {
   list: (req, res) => {
@@ -26,16 +27,25 @@ let remindersController = {
     }
   },
 
-  create: (req, res) => {
+  create: async (req, res, next) => {
     let userData = database.reminderModel.findReminders(req.user.id);
-    // req.body.cover // true or false
 
     let reminder = {
       id: userData.length + 1,
       title: req.body.title,
       description: req.body.description,
       completed: false,
+      cover: null
     };
+
+    if (req.file) {
+      reminder.cover = req.file.path.slice(6)
+    } else if (req.body.cover){
+      random_url = `https://api.unsplash.com/photos/random?client_id=${devID.unsplashID}`
+      const response = await fetch(random_url);
+      const data = await response.json();
+      reminder.cover = data.urls.thumb;
+    }
 
     userIndex = database.reminderDatabase.findIndex((user => user.id == req.user.id))
     database.reminderDatabase[userIndex].reminders.push(reminder);
@@ -54,10 +64,14 @@ let remindersController = {
     res.render("reminder/edit", { reminderItem: searchResult });
   },
 
-  update: (req, res) => {
+  update: async (req, res) => {
     let reminderToFind = req.params.id;
     let userData = database.reminderModel.findReminders(req.user.id);
-    remIndex = userData.findIndex((rem => rem.id == reminderToFind));
+
+    let userIndex = database.reminderDatabase.findIndex((user => user.id == req.user.id));
+    let remIndex = userData.findIndex((rem => rem.id == reminderToFind));
+
+    thisReminder = database.reminderDatabase[userIndex].reminders[remIndex];
 
     // set boolean in description as true if the status of the radio button was true.
     if (req.body.completed === "true"){
@@ -71,11 +85,24 @@ let remindersController = {
       id: reminderToFind,
       title: req.body.title,
       description: req.body.description,
-      completed: remStatus
+      completed: remStatus,
+      cover: null
     };
 
+    if (req.file) {
+      updatedReminder.cover = req.file.path.slice(6)
+    } else if (req.body.cover){
+      random_url = `https://api.unsplash.com/photos/random?client_id=${devID.unsplashID}`
+      const response = await fetch(random_url);
+      const data = await response.json();
+      updatedReminder.cover = data.urls.thumb;
+    } else if (req.body.remove){
+      updatedReminder.cover = null;
+    } else {
+      updatedReminder.cover = thisReminder.cover;
+    }
+
     // replace the entry
-    userIndex = database.reminderDatabase.findIndex((user => user.id == req.user.id))
     database.reminderDatabase[userIndex].reminders[remIndex] = updatedReminder;
 
     // Redirect to main reminders page.

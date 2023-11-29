@@ -3,6 +3,10 @@
 
     <ul class="list-group">
       <li class="list-group-item">
+        <% if (reminderItem.cover) { %>
+        <img src=<%= reminderItem.cover %> width="200" height="200">
+        <% } %>
+
         <h3><strong><%= reminderItem.title %>: </strong></h3>
         <h4><%= reminderItem.description %></h4>
         <h4>Completed:

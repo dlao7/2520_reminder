@@ -1,9 +1,22 @@
+// Required Modules
 const express = require("express");
 const app = express();
 const path = require("path");
 const ejsLayouts = require("express-ejs-layouts");
 const session = require("express-session");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/uploads/')
+  },
+  filename: (req, file, cb) => {
+    fullFile = `${Date.now()}${path.extname(file.originalname)}`
+    cb(null, fullFile)
+  }
+})
+const upload = multer({ storage: storage })
 
+// Controllers
 const reminderController = require("./controller/reminder_controller");
 const authController = require("./controller/auth_controller");
 const { ensureAuthenticated, forwardAuthenticated, isAdmin } = require("./middleware/checkAuth");
@@ -38,8 +51,9 @@ app.get("/reminder/new", ensureAuthenticated, reminderController.new);
 app.get("/reminder/:id", ensureAuthenticated, reminderController.listOne);
 app.get("/reminder/:id/edit", ensureAuthenticated, reminderController.edit);
 
-app.post("/reminder/", reminderController.create);
-app.post("/reminder/update/:id", reminderController.update);
+// app.post("/reminder/", reminderController.create);
+app.post('/reminder/', upload.single('cover'), reminderController.create)
+app.post("/reminder/update/:id", upload.single('cover'), reminderController.update);
 app.post("/reminder/delete/:id", reminderController.delete);
 
 // Dashboard
