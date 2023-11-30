@@ -1,8 +1,10 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
+
 const userController = require("../controller/user_controller");
-const userModel = require("../models/userModel")
+const userModel = require("../models/userModel");
+
 const devID = require("../devIDs")
 
 const localLogin = new LocalStrategy(

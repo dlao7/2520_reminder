@@ -1,12 +1,25 @@
 const passport = require("../middleware/passport");
+const userModel = require("../models/userModel")
 
 let authController = {
-  login: (req, res) => {
-    res.render("auth/login");
-  },
-
   register: (req, res) => {
     res.render("auth/register");
+  },
+
+  registerSubmit: (req, res) => {
+    let profile = {
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password
+    }
+    // adds the user to the user and reminder databases
+    userModel.userModel.createNewUser(profile, "default")
+
+    res.redirect("/login")
+  },
+
+  login: (req, res) => {
+    res.render("auth/login");
   },
 
   loginSubmit: 
@@ -19,18 +32,6 @@ let authController = {
     passport.authenticate('github', { 
     scope: [ 'user:email' ] 
     }),
-
-  registerSubmit: (req, res) => {
-    // let profile = {
-    //   name: req.body.name,
-    //   email: req.body.email,
-    //   password: req.body.password
-    // }
-
-    // usermodel.createNewUser(profile, "default")
-
-    // res.redirect("/login")
-  },
 
   logout: (req, res) => {
     req.logout((err) => {

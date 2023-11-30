@@ -26,7 +26,7 @@ const database = [
 
 const userModel = {
   createNewUser: (profile, option) => {
-    let userID = database.length + 1;
+    let userID = database.reduce((a, b) => a.id > b.id ? a : b).id + 1;
     let userEntry;
 
     if (option === "social"){
@@ -58,6 +58,7 @@ const userModel = {
           title: "Sample Title: Buy Groceries",
           description: "Sample Description: Buy milk from Safeway",
           completed: false,
+          cover: null
         },
       ]
     }

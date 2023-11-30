@@ -4,6 +4,7 @@ const devID = require("../devIDs");
 let remindersController = {
   list: (req, res) => {
     let userData = database.reminderModel.findReminders(req.user.id);
+
     if (userData) {
       res.render("reminder/index", { reminders: userData });
     }
@@ -20,6 +21,7 @@ let remindersController = {
     let searchResult = userData.find((reminder) => {
       return reminder.id == reminderToFind;
     });
+
     if (searchResult != undefined) {
       res.render("reminder/single-reminder", { reminderItem: searchResult });
     } else {
@@ -29,9 +31,10 @@ let remindersController = {
 
   create: async (req, res, next) => {
     let userData = database.reminderModel.findReminders(req.user.id);
+    highestID = userData.reduce((a, b) => a.id > b.id ? a : b).id
 
     let reminder = {
-      id: userData.length + 1,
+      id: highestID + 1,
       title: req.body.title,
       description: req.body.description,
       completed: false,
@@ -40,7 +43,7 @@ let remindersController = {
 
     if (req.file) {
       reminder.cover = req.file.path.slice(6)
-    } else if (req.body.cover){
+    } else if (req.body.rand_cover){
       random_url = `https://api.unsplash.com/photos/random?client_id=${devID.unsplashID}`
       const response = await fetch(random_url);
       const data = await response.json();
@@ -80,27 +83,25 @@ let remindersController = {
       remStatus = false
     }
 
-    // update the description
     let updatedReminder = {
       id: reminderToFind,
       title: req.body.title,
       description: req.body.description,
       completed: remStatus,
-      cover: null
+      cover: thisReminder.cover
     };
 
+    // Can upload a photo, choose a random photo, or remove the photo
     if (req.file) {
       updatedReminder.cover = req.file.path.slice(6)
-    } else if (req.body.cover){
+    } else if (req.body.rand_cover){
       random_url = `https://api.unsplash.com/photos/random?client_id=${devID.unsplashID}`
       const response = await fetch(random_url);
       const data = await response.json();
       updatedReminder.cover = data.urls.thumb;
     } else if (req.body.remove){
       updatedReminder.cover = null;
-    } else {
-      updatedReminder.cover = thisReminder.cover;
-    }
+    } 
 
     // replace the entry
     database.reminderDatabase[userIndex].reminders[remIndex] = updatedReminder;

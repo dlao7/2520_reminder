@@ -31,8 +31,11 @@ I worked on the following tasks:
 3. Implemented viewing added photos to reminders.
 4. Implemented updating and removing photos from reminders.
 5. Implemented photo randomizer via unsplash.
+6. Changes add user and reminders functions to use reduce to get highest id in databases.
+7. Implemented register function.
 
 I also needed to research on Youtube and Google the following things:
 1. Multer documentation
 2. Unsplash documentation on adding random photos
 3. https://stackoverflow.com/questions/76376889/why-am-i-constantly-receiving-the-same-image-from-unsplash-api-despite-following
+4. https://stackoverflow.com/questions/4020796/finding-the-max-value-of-a-property-in-an-array-of-objects

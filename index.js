@@ -51,7 +51,6 @@ app.get("/reminder/new", ensureAuthenticated, reminderController.new);
 app.get("/reminder/:id", ensureAuthenticated, reminderController.listOne);
 app.get("/reminder/:id/edit", ensureAuthenticated, reminderController.edit);
 
-// app.post("/reminder/", reminderController.create);
 app.post('/reminder/', upload.single('cover'), reminderController.create)
 app.post("/reminder/update/:id", upload.single('cover'), reminderController.update);
 app.post("/reminder/delete/:id", reminderController.delete);
