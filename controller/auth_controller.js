@@ -13,6 +13,7 @@ let authController = {
       password: req.body.password
     }
     // adds the user to the user and reminder databases
+    // maybe add a try?? and show an alert or something if it fails?
     userModel.userModel.createNewUser(profile, "default")
 
     res.redirect("/login")
