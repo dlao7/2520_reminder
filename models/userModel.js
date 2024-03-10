@@ -26,8 +26,10 @@ const database = [
 
 const userModel = {
   createNewUser: (profile, option) => {
+    // theoretically don't need to do this if autoincrement used?
     let userID = database.reduce((a, b) => a.id > b.id ? a : b).id + 1;
     let userEntry;
+    // needs to check if the user is already in the system (by email)
 
     if (option === "social"){
       userEntry = { 

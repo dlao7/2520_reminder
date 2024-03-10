@@ -13,7 +13,7 @@ const localLogin = new LocalStrategy(
     passwordField: "password",
   },
   (email, password, done) => {
-    const user = userController.getUserByEmailIdAndPassword(email, password);
+    const user = userController.getUserByEmailIdAndPassword(email, password); // change to query a database
     return user
       ? done(null, user)
       : done(null, false, {

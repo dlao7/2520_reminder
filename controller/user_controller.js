@@ -1,7 +1,7 @@
 const userModel = require("../models/userModel").userModel;
 
 const getUserByEmailIdAndPassword = (email, password) => {
-  let user = userModel.findOne(email);
+  let user = userModel.findOne(email); // instead queries database and checks for an email and password combination
   if (user) {
     if (isUserValid(user, password)) {
       return user;
